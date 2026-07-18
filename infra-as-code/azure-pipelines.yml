@@ -29,9 +29,9 @@ stages:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(Build.SourcesDirectory)/virtual-network'
-        backendServiceArm: 'Azure Service Connection'
-        backendAzureRmResourceGroupName: 'rg-devops'
-        backendAzureRmStorageAccountName: 'mystorage1791'
+        backendServiceArm: 'Azure subscription 1(82484a7b-d6c1-47cd-9121-62f0609fcef2)'
+        backendAzureRmResourceGroupName: 'terraform-state-rg'
+        backendAzureRmStorageAccountName: 'storagechimdi'
         backendAzureRmContainerName: 'tfstates'
         backendAzureRmKey: 'vnet.tfstate'
     - task: TerraformTaskV4@4
@@ -40,7 +40,7 @@ stages:
         command: 'apply'
         workingDirectory: '$(Build.SourcesDirectory)/virtual-network'
         commandOptions: '-auto-approve'
-        environmentServiceNameAzureRM: 'Azure Service Connection'
+        environmentServiceNameAzureRM: 'Azure subscription 1(82484a7b-d6c1-47cd-9121-62f0609fcef2)'
 
 - stage: create_vm
   dependsOn: create_vnet
@@ -57,9 +57,9 @@ stages:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(Build.SourcesDirectory)/agent-vm'
-        backendServiceArm: 'Azure Service Connection'
-        backendAzureRmResourceGroupName: 'rg-devops'
-        backendAzureRmStorageAccountName: 'mystorage1791'
+        backendServiceArm: 'Azure subscription 1(82484a7b-d6c1-47cd-9121-62f0609fcef2)'
+        backendAzureRmResourceGroupName: 'terraform-state-rg'
+        backendAzureRmStorageAccountName: 'storagechimdi'
         backendAzureRmContainerName: 'tfstates'
         backendAzureRmKey: 'vm.tfstate'
     - script: |
@@ -72,10 +72,10 @@ stages:
         command: 'apply'
         workingDirectory: '$(Build.SourcesDirectory)/agent-vm'
         commandOptions: '-auto-approve'
-        environmentServiceNameAzureRM: 'Azure Service Connection'
+        environmentServiceNameAzureRM: 'Azure subscription 1(2)(82484a7b-d6c1-47cd-9121-62f0609fcef2)'
 
 - stage: create_acr
-  dependsOn: create_vm
+  #dependsOn: create_vm
   jobs:
   - job: create_acr_job
     displayName: 'Create Azure Container Registry'
@@ -89,9 +89,9 @@ stages:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(Build.SourcesDirectory)/private-acr'
-        backendServiceArm: 'Azure Service Connection'
-        backendAzureRmResourceGroupName: 'rg-devops'
-        backendAzureRmStorageAccountName: 'mystorage1791'
+        backendServiceArm: 'Azure subscription 1(1)(82484a7b-d6c1-47cd-9121-62f0609fcef2)'
+        backendAzureRmResourceGroupName: 'terraform-state-rg'
+        backendAzureRmStorageAccountName: 'storagechimdi'
         backendAzureRmContainerName: 'tfstates'
         backendAzureRmKey: 'acr.tfstate'
     - task: TerraformTaskV4@4
@@ -100,7 +100,7 @@ stages:
         command: 'apply'
         workingDirectory: '$(Build.SourcesDirectory)/private-acr'
         commandOptions: '-auto-approve'
-        environmentServiceNameAzureRM: 'Azure Service Connection'
+        environmentServiceNameAzureRM: 'Azure subscription 1(1)(82484a7b-d6c1-47cd-9121-62f0609fcef2)'
 - stage: create_db
   jobs:
   - job: create_db_job
@@ -115,9 +115,9 @@ stages:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(Build.SourcesDirectory)/sql-dbserver'
-        backendServiceArm: 'Azure Service Connection'
-        backendAzureRmResourceGroupName: 'rg-devops'
-        backendAzureRmStorageAccountName: 'mystorage1791'
+        backendServiceArm: 'Azure subscription 1(1)(82484a7b-d6c1-47cd-9121-62f0609fcef2)'
+        backendAzureRmResourceGroupName: 'terraform-state-rg'
+        backendAzureRmStorageAccountName: 'storagechimdi'
         backendAzureRmContainerName: 'tfstates'
         backendAzureRmKey: 'db.tfstate'
     - task: TerraformTaskV4@4
@@ -126,7 +126,7 @@ stages:
         command: 'apply'
         workingDirectory: '$(Build.SourcesDirectory)/sql-dbserver'
         commandOptions: '-auto-approve'
-        environmentServiceNameAzureRM: 'Azure Service Connection'
+        environmentServiceNameAzureRM: 'Azure subscription 1(1)(82484a7b-d6c1-47cd-9121-62f0609fcef2)'
 - stage: create_appgw
   #dependsOn: create_appgw
   jobs:
@@ -142,9 +142,9 @@ stages:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(Build.SourcesDirectory)/application-gateway'
-        backendServiceArm: 'Azure Service Connection'
-        backendAzureRmResourceGroupName: 'rg-devops'
-        backendAzureRmStorageAccountName: 'mystorage1791'
+        backendServiceArm: 'Azure subscription 1(1)(82484a7b-d6c1-47cd-9121-62f0609fcef2)'
+        backendAzureRmResourceGroupName: 'terraform-state-rg'
+        backendAzureRmStorageAccountName: 'storagechimdi'
         backendAzureRmContainerName: 'tfstates'
         backendAzureRmKey: 'appgw.tfstate'
     - task: TerraformTaskV4@4
@@ -153,7 +153,7 @@ stages:
         command: 'apply'
         workingDirectory: '$(Build.SourcesDirectory)/application-gateway'
         commandOptions: '-auto-approve'
-        environmentServiceNameAzureRM: 'Azure Service Connection'
+        environmentServiceNameAzureRM: 'Azure subscription 1(1)(82484a7b-d6c1-47cd-9121-62f0609fcef2)'
 - stage: create_aks
   #dependsOn: create_acr
   jobs:
@@ -169,9 +169,9 @@ stages:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(Build.SourcesDirectory)/private-aks'
-        backendServiceArm: 'Azure Service Connection'
-        backendAzureRmResourceGroupName: 'rg-devops'
-        backendAzureRmStorageAccountName: 'mystorage1791'
+        backendServiceArm: 'Azure subscription 1(1)(82484a7b-d6c1-47cd-9121-62f0609fcef2)'
+        backendAzureRmResourceGroupName: 'terraform-state-rg'
+        backendAzureRmStorageAccountName: 'storagechimdi'
         backendAzureRmContainerName: 'tfstates'
         backendAzureRmKey: 'aks.tfstate'
     - task: TerraformTaskV4@4
@@ -180,7 +180,7 @@ stages:
         command: 'apply'
         workingDirectory: '$(Build.SourcesDirectory)/private-aks'
         commandOptions: '-auto-approve'
-        environmentServiceNameAzureRM: 'Azure Service Connection'
+        environmentServiceNameAzureRM: 'Azure subscription 1(1)(82484a7b-d6c1-47cd-9121-62f0609fcef2)'
 - stage: destroy_aks
   #dependsOn: create_aks
   jobs:
@@ -196,9 +196,9 @@ stages:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(Build.SourcesDirectory)/private-aks'
-        backendServiceArm: 'Azure Service Connection'
-        backendAzureRmResourceGroupName: 'rg-devops'
-        backendAzureRmStorageAccountName: 'mystorage1791'
+        backendServiceArm: 'Azure subscription 1(1)(82484a7b-d6c1-47cd-9121-62f0609fcef2)'
+        backendAzureRmResourceGroupName: 'terraform-state-rg'
+        backendAzureRmStorageAccountName: 'storagechimdi'
         backendAzureRmContainerName: 'tfstates'
         backendAzureRmKey: 'aks.tfstate'
     - task: TerraformTaskV4@4
@@ -207,7 +207,7 @@ stages:
         command: 'destroy'
         workingDirectory: '$(Build.SourcesDirectory)/private-aks'
         commandOptions: '-auto-approve'
-        environmentServiceNameAzureRM: 'Azure Service Connection'
+        environmentServiceNameAzureRM: 'Azure subscription 1(1)(82484a7b-d6c1-47cd-9121-62f0609fcef2)'
 - stage: destroy_appgw
   #dependsOn: create_aks
   jobs:
@@ -223,9 +223,9 @@ stages:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(Build.SourcesDirectory)/application-gateway'
-        backendServiceArm: 'Azure Service Connection'
-        backendAzureRmResourceGroupName: 'rg-devops'
-        backendAzureRmStorageAccountName: 'mystorage1791'
+        backendServiceArm: 'Azure subscription 1(1)(82484a7b-d6c1-47cd-9121-62f0609fcef2)'
+        backendAzureRmResourceGroupName: 'terraform-state-rg'
+        backendAzureRmStorageAccountName: 'storagechimdi'
         backendAzureRmContainerName: 'tfstates'
         backendAzureRmKey: 'appgw.tfstate'
     - task: TerraformTaskV4@4
@@ -234,7 +234,7 @@ stages:
         command: 'destroy'
         workingDirectory: '$(Build.SourcesDirectory)/application-gateway'
         commandOptions: '-auto-approve'
-        environmentServiceNameAzureRM: 'Azure Service Connection'
+        environmentServiceNameAzureRM: 'Azure subscription 1(1)(82484a7b-d6c1-47cd-9121-62f0609fcef2)'
 
 - stage: destroy_acr
   #dependsOn: create_acr
@@ -251,9 +251,9 @@ stages:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(Build.SourcesDirectory)/private-acr'
-        backendServiceArm: 'Azure Service Connection'
-        backendAzureRmResourceGroupName: 'rg-devops'
-        backendAzureRmStorageAccountName: 'mystorage1791'
+        backendServiceArm: 'Azure subscription 1(1)(82484a7b-d6c1-47cd-9121-62f0609fcef2)'
+        backendAzureRmResourceGroupName: 'terraform-state-rg'
+        backendAzureRmStorageAccountName: 'storagechimdi'
         backendAzureRmContainerName: 'tfstates'
         backendAzureRmKey: 'acr.tfstate'
     - task: TerraformTaskV4@4
@@ -262,7 +262,7 @@ stages:
         command: 'destroy'
         workingDirectory: '$(Build.SourcesDirectory)/private-acr'
         commandOptions: '-auto-approve'
-        environmentServiceNameAzureRM: 'Azure Service Connection'
+        environmentServiceNameAzureRM: 'Azure subscription 1(1)(82484a7b-d6c1-47cd-9121-62f0609fcef2)'
 - stage: destroy_db
   jobs:
   - job: destroy_db_job
@@ -277,9 +277,9 @@ stages:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(Build.SourcesDirectory)/sql-dbserver'
-        backendServiceArm: 'Azure Service Connection'
-        backendAzureRmResourceGroupName: 'rg-devops'
-        backendAzureRmStorageAccountName: 'mystorage1791'
+        backendServiceArm: 'Azure subscription 1(1)(82484a7b-d6c1-47cd-9121-62f0609fcef2)'
+        backendAzureRmResourceGroupName: 'terraform-state-rg'
+        backendAzureRmStorageAccountName: 'storagechimdi'
         backendAzureRmContainerName: 'tfstates'
         backendAzureRmKey: 'db.tfstate'
     - task: TerraformTaskV4@4
@@ -288,7 +288,7 @@ stages:
         command: 'destroy'
         workingDirectory: '$(Build.SourcesDirectory)/sql-dbserver'
         commandOptions: '-auto-approve'
-        environmentServiceNameAzureRM: 'Azure Service Connection'
+        environmentServiceNameAzureRM: 'Azure subscription 1(1)(82484a7b-d6c1-47cd-9121-62f0609fcef2)'
 
 - stage: destroy_vm
   #dependsOn: destroy_acr
@@ -305,9 +305,9 @@ stages:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(Build.SourcesDirectory)/agent-vm'
-        backendServiceArm: 'Azure Service Connection'
-        backendAzureRmResourceGroupName: 'rg-devops'
-        backendAzureRmStorageAccountName: 'mystorage1791'
+        backendServiceArm: 'Azure subscription 1(1)(82484a7b-d6c1-47cd-9121-62f0609fcef2)'
+        backendAzureRmResourceGroupName: 'terraform-state-rg'
+        backendAzureRmStorageAccountName: 'storagechimdi'
         backendAzureRmContainerName: 'tfstates'
         backendAzureRmKey: 'vm.tfstate'
     - task: TerraformTaskV4@4
@@ -316,7 +316,7 @@ stages:
         command: 'destroy'
         workingDirectory: '$(Build.SourcesDirectory)/agent-vm'
         commandOptions: '-auto-approve'
-        environmentServiceNameAzureRM: 'Azure Service Connection'
+        environmentServiceNameAzureRM: 'Azure subscription 1(1)(82484a7b-d6c1-47cd-9121-62f0609fcef2)'
 
 - stage: destroy_vnet
   dependsOn: destroy_vm
@@ -333,9 +333,9 @@ stages:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(Build.SourcesDirectory)/virtual-network'
-        backendServiceArm: 'Azure Service Connection'
-        backendAzureRmResourceGroupName: 'rg-devops'
-        backendAzureRmStorageAccountName: 'mystorage1791'
+        backendServiceArm: 'Azure subscription 1(1)(82484a7b-d6c1-47cd-9121-62f0609fcef2)'
+        backendAzureRmResourceGroupName: 'terraform-state-rg'
+        backendAzureRmStorageAccountName: 'storagechimdi'
         backendAzureRmContainerName: 'tfstates'
         backendAzureRmKey: 'vnet.tfstate'
     - task: TerraformTaskV4@4
@@ -344,4 +344,4 @@ stages:
         command: 'destroy'
         workingDirectory: '$(Build.SourcesDirectory)/virtual-network'
         commandOptions: '-auto-approve'
-        environmentServiceNameAzureRM: 'Azure Service Connection'
+        environmentServiceNameAzureRM: 'Azure subscription 1(1)(82484a7b-d6c1-47cd-9121-62f0609fcef2)'
