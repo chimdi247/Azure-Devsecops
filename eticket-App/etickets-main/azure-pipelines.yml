@@ -7,58 +7,35 @@ resources:
 - repo: self
 variables:
   tag: '$(Build.BuildId)'
-#pool:
- # Default
-stages:
-- stage: Sonar_Job
-  jobs:
-  - job: Sonar_Job
-    pool:
-      name: 'Azure Pipelines'  # Adjust the agent pool as needed
-    steps:
-    - checkout: self
-    - task: UseDotNet@2
-      inputs:
-        packageType: 'sdk'
-        version: '7.x'
-    - task: SonarCloudPrepare@1
-      inputs:
-        SonarCloud: 'Sonar Cloud'
-        organization: 'demoaks'
-        scannerMode: 'MSBuild'
-        projectKey: 'demoaks_etickets'
-        projectName: 'etickets'
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: 'build'
-        projects: 'eTickets.sln'
-        workingDirectory: '$(System.DefaultWorkingDirectory)'
-    - task: SonarCloudAnalyze@1
-      inputs:
-        jdkVersion: 'JAVA_HOME_17_X64'  # Adjust the JDK version if needed
-    - task: SonarCloudPublish@1
-      inputs:
-        pollingTimeoutSec: '300'
 
-####################################################################################################
-##############################################################################################################
+pool:
+  name: Default
+
+stages:
+
 - stage: Build_and_Push
   variables:
    - group: secrets
    - group: acr_variables
   jobs:
   - job: Build_and_Push_Job
-    pool:
-      name: Default
     steps:
     - checkout: self
     - script: |
         # Authenticate with Azure CLI
         az login --service-principal -u $(servicePrincipalId) -p $(servicePrincipalKey) --tenant $(tenantId)
-        az acr login --name $(TF_VAR_PRIVATE_ACR_NAME)  # Replace with your ACR name
+        az acr login --name $(TF_VAR_PRIVATE_ACR_NAME)
+
+        # Sanitize repo name to lowercase for Docker tag compliance
+        REPO_NAME=$(echo "$(build.repository.name)" | tr '[:upper:]' '[:lower:]')
+        BRANCH_NAME=$(echo "$(Build.SourceBranchName)" | tr '[:upper:]' '[:lower:]')
+        IMAGE_TAG="${REPO_NAME}-${BRANCH_NAME}:v1"
+
+        echo "Building image: $(TF_VAR_PRIVATE_ACR_NAME).azurecr.io/${IMAGE_TAG}"
+
         # Build and push the Docker image to ACR
-        docker build -t $(TF_VAR_PRIVATE_ACR_NAME).azurecr.io/$(build.repository.name)-$(Build.SourceBranchName):v1 .
-        docker push $(TF_VAR_PRIVATE_ACR_NAME).azurecr.io/$(build.repository.name)-$(Build.SourceBranchName):v1
+        docker build -t $(TF_VAR_PRIVATE_ACR_NAME).azurecr.io/${IMAGE_TAG} .
+        docker push $(TF_VAR_PRIVATE_ACR_NAME).azurecr.io/${IMAGE_TAG}
       displayName: 'Build and Push Docker Image'
 
 - stage: Deploy_to_AKS
@@ -77,8 +54,7 @@ stages:
           - script: |
               # Authenticate with Azure CLI
               az login --service-principal -u $(servicePrincipalId) -p $(servicePrincipalKey) --tenant $(tenantId)
-              az aks get-credentials --resource-group rg-devops --name aksdemo --overwrite-existing
+              az aks get-credentials --resource-group terraform-state-rg --name aksdemo --overwrite-existing
               # Deploy to AKS
               kubectl apply -f deployment.yaml
             displayName: 'Deploy to AKS'
-
