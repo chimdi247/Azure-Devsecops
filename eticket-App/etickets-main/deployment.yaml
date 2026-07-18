@@ -4,7 +4,7 @@ metadata:
   name: db-connection-secret
 type: Opaque
 data:
-  connection-string: U2VydmVyPXRjcDpldGlja2V0ZGJzZXJ2ZXIuZGF0YWJhc2Uud2luZG93cy5uZXQsMTQzMztJbml0aWFsIENhdGFsb2c9ZXRpY2tldHMtZGI7UGVyc2lzdCBTZWN1cml0eSBJbmZvPUZhbHNlO1VzZXIgSUQ9c2h1YmhhbTtQYXNzd29yZD1wYXNzd29yZEAxMjM7TXVsdGlwbGVBY3RpdmVSZXN1bHRTZXRzPUZhbHNlO0VuY3J5cHQ9VHJ1ZTtUcnVzdFNlcnZlckNlcnRpZmljYXRlPUZhbHNlO0Nvbm5lY3Rpb24gVGltZW91dD0zMDs=
+  connection-string: U2VydmVyPXRjcDpldGlja2V0ZGJzZXJ2ZXIuZGF0YWJhc2Uud2luZG93cy5uZXQsMTQzMztJbml0aWFsIENhdGFsb2c9ZXRpY2tldHMtZGI7UGVyc2lzdCBTZWN1cml0eSBJbmZvPUZhbHNlO1VzZXIgSUQ9Y2hpbWRpO1Bhc3N3b3JkPXBhc3N3b3JkQDEyMztNdWx0aXBsZUFjdGl2ZVJlc3VsdFNldHM9RmFsc2U7RW5jcnlwdD1UcnVlO1RydXN0U2VydmVyQ2VydGlmaWNhdGU9RmFsc2U7Q29ubmVjdGlvbiBUaW1lb3V0PTMwOw==
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: my-container
-        image: myacr17911.azurecr.io/etickets-main-main:v1
+        image: myacr247.azurecr.io/etickets-azure-devops.git-main:v1 
         ports:
         - containerPort: 80
         env:
